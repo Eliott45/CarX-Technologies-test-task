@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Extensions.PoolingSystem.Application;
 using GameCore.Notifiers;
+using GameCore.Settings;
 using UnityEngine;
 using Zenject;
 
@@ -10,45 +11,48 @@ namespace GameCore.Towers
 {
     public class SimpleTower : MonoBehaviour
     {
-        [SerializeField] private float _attackReloading = 0.5f;
-        [SerializeField] private float _attackRange = 4;
-        [SerializeField] private float _heightIndent = 1.5f;
         [SerializeField] private EnemyNotifier enemyNotifier;
-        [SerializeField] private GuidedProjectile _projectilePrefab;
-
-        private IPoolApplication _poolApplication;
 
         private readonly List<GameObject> _targets = new List<GameObject>(5);
-            
-        private float _lastShotTime = float.NegativeInfinity; 
+        
+        private IPoolApplication _poolApplication;
+        private SimpleTowerSettings _settings;
+        private float _lastShotTime = float.NegativeInfinity;
 
         [Inject]
-        public void Construct(IPoolApplication poolApplication)
+        public void Construct(IPoolApplication poolApplication, SimpleTowerSettings settings)
         {   
-            _poolApplication = poolApplication ?? throw new NullReferenceException(nameof(IPoolApplication));;
+            _poolApplication = poolApplication ?? throw new NullReferenceException(nameof(IPoolApplication));
+            _settings = settings ? settings : throw new NullReferenceException(nameof(SimpleTowerSettings));
+        }
+
+        private void OnEnable()
+        {
+            enemyNotifier.OnTargetEnter += OnEnemyAppear;
+            enemyNotifier.OnTargetExit += OnEnemyDisappear;
+        }
+
+        private void OnDisable()
+        {
+            enemyNotifier.OnTargetEnter -= OnEnemyAppear;
+            enemyNotifier.OnTargetExit -= OnEnemyDisappear;
         }
 
         private void Awake()
         {
-            enemyNotifier.UpdateNotifierRadius(_attackRange);
-            
-            enemyNotifier.OnTargetEnter += OnEnemyAppear;
-            enemyNotifier.OnTargetExit += OnEnemyDisappear;
+            enemyNotifier.UpdateNotifierRadius(_settings.AttackRange);
         }
         
         private void Update () {
             
-            if (_lastShotTime + _attackReloading > Time.time || !HasTarget())
+            if (!IsAvailableToAttack())
                 return;
             
             Attack(_targets.First());
         }
 
-        private void OnDestroy()
-        {
-            enemyNotifier.OnTargetEnter -= OnEnemyAppear;
-            enemyNotifier.OnTargetExit -= OnEnemyDisappear;
-        }
+        private bool IsAvailableToAttack() => 
+            !(_lastShotTime + _settings.AttackReloading > Time.time) && HasTarget();
 
         private void OnEnemyAppear(GameObject enemy) => 
             _targets.Add(enemy);
@@ -64,8 +68,8 @@ namespace GameCore.Towers
         
         private void Attack(GameObject target) 
         {
-            var projectile = _poolApplication.Create(_projectilePrefab, transform);
-            projectile.transform.position += Vector3.up * _heightIndent; 
+            var projectile = _poolApplication.Create(_settings.ProjectilePrefab, transform);
+            projectile.transform.position += Vector3.up * _settings.HeightIndent; 
             projectile.m_target = target; // TODO plug for example: SetTarget(target)
             
             _lastShotTime = Time.time;
