@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Extensions.PoolingSystem.Application;
+using GameCore.Notifiers;
 using UnityEngine;
 using Zenject;
 
@@ -7,49 +10,65 @@ namespace GameCore.Towers
 {
     public class SimpleTower : MonoBehaviour
     {
-        [SerializeField] private float _attackDelay;
-        [SerializeField] private float _attackRange;
+        [SerializeField] private float _attackReloading = 0.5f;
+        [SerializeField] private float _attackRange = 4;
         [SerializeField] private float _heightIndent = 1.5f;
-        [SerializeField] private SphereCollider _triggerCollider;
+        [SerializeField] private EnemyNotifier enemyNotifier;
         [SerializeField] private GuidedProjectile _projectilePrefab;
 
         private IPoolApplication _poolApplication;
-        
-        private float _lastShotTime = -0.5f;
+
+        private readonly List<GameObject> _targets = new List<GameObject>(5);
+            
+        private float _lastShotTime = float.NegativeInfinity; 
 
         [Inject]
         public void Construct(IPoolApplication poolApplication)
         {   
-            _poolApplication = poolApplication;
+            _poolApplication = poolApplication ?? throw new NullReferenceException(nameof(IPoolApplication));;
         }
 
         private void Awake()
         {
-            UpdateTriggerColliderRadius(_attackRange);
+            enemyNotifier.UpdateNotifierRadius(_attackRange);
+            
+            enemyNotifier.OnTargetEnter += OnEnemyAppear;
+            enemyNotifier.OnTargetExit += OnEnemyDisappear;
         }
-
+        
         private void Update () {
-            Attack();
+            
+            if (_lastShotTime + _attackReloading > Time.time || !HasTarget())
+                return;
+            
+            Attack(_targets.First());
         }
 
-        private void UpdateTriggerColliderRadius(float radius) => 
-            _triggerCollider.radius = radius;
-
-        private void Attack()
+        private void OnDestroy()
         {
-            foreach (var monster in FindObjectsOfType<Monster>()) {
-                if (Vector3.Distance (transform.position, monster.transform.position) > _attackRange)
-                    continue;
+            enemyNotifier.OnTargetEnter -= OnEnemyAppear;
+            enemyNotifier.OnTargetExit -= OnEnemyDisappear;
+        }
 
-                if (_lastShotTime + _attackDelay > Time.time)
-                    continue;
-                
-                var projectile = _poolApplication.Create(_projectilePrefab, transform);
-                projectile.transform.position += Vector3.up * _heightIndent; 
-                projectile.m_target = monster.gameObject; // TODO pls
+        private void OnEnemyAppear(GameObject enemy) => 
+            _targets.Add(enemy);
 
-                _lastShotTime = Time.time;
-            }
+        private void OnEnemyDisappear(GameObject enemy) => 
+            _targets.Remove(enemy);
+        
+        private bool HasTarget()
+        {
+            _targets.RemoveAll(x => !x);
+            return _targets.Count > 0;
+        } 
+        
+        private void Attack(GameObject target) 
+        {
+            var projectile = _poolApplication.Create(_projectilePrefab, transform);
+            projectile.transform.position += Vector3.up * _heightIndent; 
+            projectile.m_target = target; // TODO plug for example: SetTarget(target)
+            
+            _lastShotTime = Time.time;
         }
     }
 }

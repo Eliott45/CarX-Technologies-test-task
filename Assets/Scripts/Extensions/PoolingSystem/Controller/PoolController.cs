@@ -11,7 +11,7 @@ namespace Extensions.PoolingSystem.Controller
             public readonly LinkedList<GameObject> noUse = new LinkedList<GameObject>();
         }
         
-        public int DefaultCount = 3;
+        [SerializeField] private int _defaultCount = 3;
         
         private readonly Dictionary<GameObject, Pool> _prefabToPool = new Dictionary<GameObject, Pool>();
         private readonly Dictionary<GameObject, Pool> _objectToPool = new Dictionary<GameObject, Pool>();
@@ -21,7 +21,7 @@ namespace Extensions.PoolingSystem.Controller
             if (!prefab)
                 return null;
 
-            var pool = GetOrCreatePool(prefab, DefaultCount);
+            var pool = GetOrCreatePool(prefab, _defaultCount);
 
             GameObject item;
             while (pool.noUse.Count > 0)
@@ -84,7 +84,7 @@ namespace Extensions.PoolingSystem.Controller
             if (obj == null || !_objectToPool.TryGetValue(obj, out var pool))
                 return;
 
-            obj.transform.SetParent(this.transform, false);
+            obj.transform.SetParent(transform, false);
             obj.SetActive(false);
             
             if (pool.inUse.Remove(obj)) 
