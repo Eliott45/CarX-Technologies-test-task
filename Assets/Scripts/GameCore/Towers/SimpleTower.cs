@@ -1,21 +1,39 @@
-﻿using UnityEngine;
+﻿using System;
+using Extensions.PoolingSystem.Application;
+using UnityEngine;
+using Zenject;
 
 namespace GameCore.Towers
 {
     public class SimpleTower : MonoBehaviour
     {
-        [SerializeField] private float _attackDelay = 0.5f;
-        [SerializeField] private float _attackRange = 4f;
-        [SerializeField] private GameObject _projectilePrefab;
+        [SerializeField] private float _attackDelay;
+        [SerializeField] private float _attackRange;
+        [SerializeField] private float _heightIndent = 1.5f;
+        [SerializeField] private SphereCollider _triggerCollider;
+        [SerializeField] private GuidedProjectile _projectilePrefab;
 
+        private IPoolApplication _poolApplication;
+        
         private float _lastShotTime = -0.5f;
 
+        [Inject]
+        public void Construct(IPoolApplication poolApplication)
+        {   
+            _poolApplication = poolApplication;
+        }
+
+        private void Awake()
+        {
+            UpdateTriggerColliderRadius(_attackRange);
+        }
+
         private void Update () {
-            if (_projectilePrefab == null)
-                return;
-            
             Attack();
         }
+
+        private void UpdateTriggerColliderRadius(float radius) => 
+            _triggerCollider.radius = radius;
 
         private void Attack()
         {
@@ -25,11 +43,10 @@ namespace GameCore.Towers
 
                 if (_lastShotTime + _attackDelay > Time.time)
                     continue;
-
-                // shot
-                var projectile = Instantiate(_projectilePrefab, transform.position + Vector3.up * 1.5f, Quaternion.identity) as GameObject;
-                var projectileBeh = projectile.GetComponent<GuidedProjectile> ();
-                projectileBeh.m_target = monster.gameObject;
+                
+                var projectile = _poolApplication.Create(_projectilePrefab, transform);
+                projectile.transform.position += Vector3.up * _heightIndent; 
+                projectile.m_target = monster.gameObject; // TODO pls
 
                 _lastShotTime = Time.time;
             }
