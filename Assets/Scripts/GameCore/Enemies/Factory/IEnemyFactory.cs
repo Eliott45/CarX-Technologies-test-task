@@ -4,6 +4,6 @@ namespace GameCore.Enemies.Factory
 {
     public interface IEnemyFactory
     {
-        IEnemy CreateMonster(Monster monsterPrefab, Transform spawnPosition);
+        IEnemy CreateMonster(Monster monsterPrefab, Transform spawnTransform);
     }
 }

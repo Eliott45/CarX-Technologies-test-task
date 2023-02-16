@@ -1,22 +1,33 @@
-﻿using System;
-using GameCore.Enemies;
+﻿using GameCore.Enemies;
 using UnityEngine;
 
 namespace GameCore.Projectiles
 {
 	public class GuidedProjectile : Projectile
 	{
-		private void Update () {
-			if (target == null) {
-				Destroy (gameObject);
-				return;
-			}
+		[SerializeField] private Rigidbody _rigidbody;
 
-			var translation = target.transform.position - transform.position;
-			if (translation.magnitude > speed) {
-				translation = translation.normalized * speed;
-			}
-			transform.Translate (translation);
+		private void FixedUpdate()
+		{
+			if (target == null || !target.activeSelf) 
+				ReturnToPool();
+			Move();
+		}
+
+		private void Move()
+		{
+			var currentVelocity = _rigidbody.velocity;
+            
+			var movePosition = target.transform.position - transform.position;
+			movePosition.Normalize();
+			movePosition *= speed;
+
+			var targetVelocity = transform.TransformDirection(movePosition);
+			var finalVelocity = targetVelocity - currentVelocity;
+            
+			Vector3.ClampMagnitude(finalVelocity, default);
+            
+			_rigidbody.AddForce(finalVelocity, ForceMode.VelocityChange);
 		}
 		
 		private void OnCollisionEnter(Collision potentialTarget)
@@ -25,7 +36,7 @@ namespace GameCore.Projectiles
 				return;
 			
 			enemy.TakeDamage(damage);
-			Destroy(gameObject);
+			ReturnToPool();
 		}
 	}
 }

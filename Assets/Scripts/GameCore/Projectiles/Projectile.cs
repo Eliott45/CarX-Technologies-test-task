@@ -1,13 +1,22 @@
-﻿using UnityEngine;
+﻿using System;
+using Extensions.PoolingSystem.Application;
+using UnityEngine;
 
 namespace GameCore.Projectiles
 {
     public abstract class Projectile : MonoBehaviour, IProjectile
     {
+        private IPoolApplication _poolApplication;
+        
         protected GameObject target;
         protected float speed;
         protected int damage;
-        
+
+        public void Init(IPoolApplication poolApplication)
+        {
+            _poolApplication = poolApplication ?? throw new NullReferenceException(nameof(IPoolApplication));
+        }
+
         public void SetTarget(GameObject targetGameObject) => 
             target = targetGameObject;
 
@@ -16,5 +25,11 @@ namespace GameCore.Projectiles
 
         public void SetSpeed(float newSpeed) => 
             speed = newSpeed;
+
+        public void SetCurrentPosition(Vector3 spawnTransformPosition) => 
+            transform.position = spawnTransformPosition;
+
+        protected void ReturnToPool() => 
+            _poolApplication.Return(gameObject);
     }
 }

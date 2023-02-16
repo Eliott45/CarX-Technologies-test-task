@@ -18,13 +18,13 @@ namespace GameCore.Enemies.Factory
                 : throw new NullReferenceException(nameof(MonsterSettings));
         }
 
-        public IEnemy CreateMonster(Monster monsterPrefab, Transform spawnPosition)
+        public IEnemy CreateMonster(Monster monsterPrefab, Transform spawnTransform)
         {
-            var monster = (IEnemy)_poolApplication.Create(monsterPrefab, spawnPosition);
+            var monster = (IEnemy)_poolApplication.Create(monsterPrefab, spawnTransform);
 
             monster.Init(_poolApplication);
             
-            monster.SetCurrentPosition(spawnPosition.position);
+            monster.SetCurrentPosition(spawnTransform.position);
             
             monster.SetMaxHp(_monsterSettings.Hp);
             monster.SetSpeed(_monsterSettings.Speed);

@@ -22,7 +22,15 @@ namespace GameCore.Projectiles.Factory
         {
             var projectileSettings = _projectileSettingsRepository.GetProjectileSettings(projectileKeyword);
             
-            return _poolApplication.Create(projectileSettings.ProjectilePrefab, spawnTransform);
+            var projectile = (IProjectile)_poolApplication.Create(projectileSettings.ProjectilePrefab, spawnTransform);
+            
+            projectile.Init(_poolApplication);
+            projectile.SetCurrentPosition(spawnTransform.position);
+            
+            projectile.SetSpeed(projectileSettings.Speed);
+            projectile.SetDamage(projectileSettings.Damage);
+
+            return projectile;
         }
     }
 }
