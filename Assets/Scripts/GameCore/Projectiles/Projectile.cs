@@ -8,9 +8,9 @@ namespace GameCore.Projectiles
     {
         private IPoolApplication _poolApplication;
         
-        protected GameObject target;
-        protected float speed;
-        protected int damage;
+        private protected GameObject target;
+        private protected float speed;
+        private protected int damage;
 
         public void Init(IPoolApplication poolApplication)
         {
