@@ -7,7 +7,6 @@ namespace GameCore.Enemies
     public class Monster : MonoBehaviour, IEnemy
     {
         [SerializeField] private Rigidbody _rigidbody;
-        const float m_reachDistance = 0.3f; // TODO remove it pls
 
         private IPoolApplication _poolApplication;
         
@@ -44,13 +43,7 @@ namespace GameCore.Enemies
 
         private void Die() => 
             _poolApplication.Return(gameObject);
-
-        private void Update () {
-            if (Vector3.Distance (transform.position, _destination) <= m_reachDistance) {
-                Destroy (gameObject);
-            }
-        }
-
+        
         private void FixedUpdate()
         {
             Move();
