@@ -23,7 +23,9 @@ namespace GameCore.Towers
         public void Construct(IPoolApplication poolApplication, SimpleTowerSettings settings)
         {   
             _poolApplication = poolApplication ?? throw new NullReferenceException(nameof(IPoolApplication));
-            _settings = settings ? settings : throw new NullReferenceException(nameof(SimpleTowerSettings));
+            _settings = settings 
+                ? settings 
+                : throw new NullReferenceException(nameof(SimpleTowerSettings));
         }
 
         private void OnEnable()
