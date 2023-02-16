@@ -5,8 +5,6 @@ namespace GameCore.Projectiles
 {
 	public class GuidedProjectile : Projectile
 	{
-		[SerializeField] private Rigidbody _rigidbody;
-
 		private void FixedUpdate()
 		{
 			if (target == null || !target.activeSelf) 
@@ -16,7 +14,7 @@ namespace GameCore.Projectiles
 
 		private void Move()
 		{
-			var currentVelocity = _rigidbody.velocity;
+			var currentVelocity = rb.velocity;
             
 			var movePosition = target.transform.position - transform.position;
 			movePosition.Normalize();
@@ -27,7 +25,7 @@ namespace GameCore.Projectiles
             
 			Vector3.ClampMagnitude(finalVelocity, default);
             
-			_rigidbody.AddForce(finalVelocity, ForceMode.VelocityChange);
+			rb.AddForce(finalVelocity, ForceMode.VelocityChange);
 		}
 		
 		private void OnCollisionEnter(Collision potentialTarget)

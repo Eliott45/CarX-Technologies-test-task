@@ -6,6 +6,8 @@ namespace GameCore.Projectiles
 {
     public abstract class Projectile : MonoBehaviour, IProjectile
     {
+        [SerializeField] private protected Rigidbody rb;
+        
         private IPoolApplication _poolApplication;
         
         private protected GameObject target;
