@@ -1,32 +1,31 @@
-﻿using GameCore.Enemies;
+﻿using System;
+using GameCore.Enemies;
 using UnityEngine;
 
 namespace GameCore.Projectiles
 {
-	public class GuidedProjectile : Projectile {
-		public float m_speed = 0.2f;
-		public int m_damage = 10;
-		
+	public class GuidedProjectile : Projectile
+	{
 		private void Update () {
-			if (_target == null) {
+			if (target == null) {
 				Destroy (gameObject);
 				return;
 			}
 
-			var translation = _target.transform.position - transform.position;
-			if (translation.magnitude > m_speed) {
-				translation = translation.normalized * m_speed;
+			var translation = target.transform.position - transform.position;
+			if (translation.magnitude > speed) {
+				translation = translation.normalized * speed;
 			}
 			transform.Translate (translation);
 		}
-
-		void OnTriggerEnter(Collider other) {
-			var monster = other.gameObject.GetComponent<Monster> ();
-			if (monster == null)
+		
+		private void OnCollisionEnter(Collision potentialTarget)
+		{
+			if (!potentialTarget.gameObject.TryGetComponent<IEnemy>(out var enemy))
 				return;
-
-			monster.TakeDamage(m_damage);
-			Destroy (gameObject);
+			
+			enemy.TakeDamage(damage);
+			Destroy(gameObject);
 		}
 	}
 }

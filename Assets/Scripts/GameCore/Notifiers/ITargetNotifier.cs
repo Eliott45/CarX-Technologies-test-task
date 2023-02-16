@@ -1,9 +1,8 @@
 ﻿using System;
-using UnityEngine;
 
 namespace GameCore.Notifiers
 {
-    public interface ITargetNotifier<T>
+    public interface ITargetNotifier<out T>
     {
         event Action<T> OnTargetEnter;
         event Action<T> OnTargetExit;
