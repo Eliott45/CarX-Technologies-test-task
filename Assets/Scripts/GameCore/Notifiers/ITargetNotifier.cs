@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace GameCore.Notifiers
 {
-    public interface ITargetNotifier
+    public interface ITargetNotifier<T>
     {
-        event Action<GameObject> OnTargetEnter;
-        event Action<GameObject> OnTargetExit;
+        event Action<T> OnTargetEnter;
+        event Action<T> OnTargetExit;
         
         void UpdateNotifierRadius(float radius);
     }

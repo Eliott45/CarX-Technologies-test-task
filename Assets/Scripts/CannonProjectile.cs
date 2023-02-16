@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using GameCore.Enemies;
 
 public class CannonProjectile : MonoBehaviour {
 	public float m_speed = 0.2f;

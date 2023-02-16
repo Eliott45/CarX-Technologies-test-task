@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using GameCore.Enemies;
 
 public class GuidedProjectile : MonoBehaviour {
 	public GameObject m_target;

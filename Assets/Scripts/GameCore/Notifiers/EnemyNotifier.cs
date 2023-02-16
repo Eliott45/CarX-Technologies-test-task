@@ -1,9 +1,10 @@
 ﻿using System;
+using GameCore.Enemies;
 using UnityEngine;
 
 namespace GameCore.Notifiers
 {
-    public class EnemyNotifier : MonoBehaviour, ITargetNotifier
+    public class EnemyNotifier : MonoBehaviour, ITargetNotifier<GameObject>
     {
         [SerializeField] private SphereCollider _sphereCollider;
         
@@ -15,14 +16,14 @@ namespace GameCore.Notifiers
 
         private void OnTriggerEnter(Collider potentialTarget)
         {
-            if (potentialTarget.TryGetComponent<Monster>(out var enemy)) // TODO IEnemy
-                OnTargetEnter?.Invoke(enemy.gameObject);
+            if (potentialTarget.TryGetComponent<IEnemy>(out var enemy))
+                OnTargetEnter?.Invoke(enemy.GetEnemyGameObject());
         }
 
         private void OnTriggerExit(Collider potentialTarget)
         {
-            if (potentialTarget.TryGetComponent<Monster>(out var enemy))  // TODO IEnemy
-                OnTargetExit?.Invoke(enemy.gameObject);
+            if (potentialTarget.TryGetComponent<IEnemy>(out var enemy))  
+                OnTargetExit?.Invoke(enemy.GetEnemyGameObject());
         }
     }
 }
