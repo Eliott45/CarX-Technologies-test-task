@@ -1,4 +1,4 @@
-﻿namespace GameCore.Settings.Projectiles
+﻿namespace GameCore.Settings.Keywords
 {
     public enum EProjectileKeyword
     {

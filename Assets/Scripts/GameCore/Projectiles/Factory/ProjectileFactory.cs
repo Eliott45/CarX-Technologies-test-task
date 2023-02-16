@@ -1,6 +1,8 @@
 ﻿using System;
 using Extensions.PoolingSystem.Application;
+using GameCore.Settings.Keywords;
 using GameCore.Settings.Projectiles;
+using GameCore.Settings.Repositories;
 using UnityEngine;
 
 namespace GameCore.Projectiles.Factory

@@ -1,34 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Extensions.PoolingSystem.Application;
 using GameCore.Notifiers;
 using GameCore.Projectiles.Factory;
+using GameCore.Settings.Keywords;
+using GameCore.Settings.Repositories;
 using GameCore.Settings.Towers;
 using UnityEngine;
 using Zenject;
 
-namespace GameCore.Towers
+namespace GameCore.Towers.Controllers
 {
-    public class SimpleTower : MonoBehaviour
+    public class SimpleTowerController : MonoBehaviour
     {
+        [SerializeField] private ETowerKeyword _towerSettingsType = ETowerKeyword.SimpleTower;
         [SerializeField] private EnemyNotifier _enemyNotifier;
         [SerializeField] private Transform _muggleTransform;
 
         private readonly List<GameObject> _targets = new List<GameObject>(5);
         
         private IProjectilesFactory _projectilesFactory;
-        private SimpleTowerSettings _settings;
-        
+        private TowerSettingsRepository _towerSettingsRepository;
+
+        private TowerSettings _settings;
         private float _lastShotTime = float.NegativeInfinity;
 
         [Inject]
-        public void Construct(IProjectilesFactory projectilesFactory, SimpleTowerSettings settings)
+        public void Construct(IProjectilesFactory projectilesFactory, TowerSettingsRepository settings)
         {
             _projectilesFactory = projectilesFactory ?? throw new NullReferenceException(nameof(IProjectilesFactory));
-            _settings = settings 
+            _towerSettingsRepository = settings 
                 ? settings 
-                : throw new NullReferenceException(nameof(SimpleTowerSettings));
+                : throw new NullReferenceException(nameof(TowerSettings));
         }
 
         private void OnEnable()
@@ -45,9 +48,14 @@ namespace GameCore.Towers
 
         private void Awake()
         {
+            _settings = _towerSettingsRepository.GetTowerSettings(_towerSettingsType);
+        }
+
+        private void Start()
+        {
             _enemyNotifier.UpdateNotifierRadius(_settings.AttackRange);
         }
-        
+
         private void Update () {
             
             if (!IsAvailableToAttack())

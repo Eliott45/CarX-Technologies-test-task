@@ -1,4 +1,4 @@
-﻿using GameCore.Settings.Towers;
+﻿using GameCore.Settings.Repositories;
 using UnityEngine;
 using Zenject;
 
@@ -6,13 +6,13 @@ namespace GameCore.Towers.Infrastructure
 {
     public class TowersInstaller : MonoInstaller
     {
-        [SerializeField] private SimpleTowerSettings _simpleTowerSettings;
+        [SerializeField] private TowerSettingsRepository _towerSettingsRepository;
 
         public override void InstallBindings()
         {
             Container
-                .Bind<SimpleTowerSettings>()
-                .FromInstance(_simpleTowerSettings)
+                .Bind<TowerSettingsRepository>()
+                .FromInstance(_towerSettingsRepository)
                 .AsSingle();
         }
     }

@@ -1,4 +1,5 @@
-﻿using GameCore.Settings.Projectiles;
+﻿using GameCore.Settings.Keywords;
+using GameCore.Settings.Projectiles;
 using UnityEngine;
 
 namespace GameCore.Projectiles.Factory

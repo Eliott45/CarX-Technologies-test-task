@@ -1,5 +1,5 @@
 ﻿using GameCore.Projectiles.Factory;
-using GameCore.Settings.Projectiles;
+using GameCore.Settings.Repositories;
 using UnityEngine;
 using Zenject;
 
@@ -7,7 +7,7 @@ namespace GameCore.Projectiles.Infrastructure
 {
     public class ProjectilesInstaller : MonoInstaller
     {
-        [SerializeField] private ProjectileSettingsRepository projectileSettingsRepository;
+        [SerializeField] private ProjectileSettingsRepository _projectileSettingsRepository;
 
         public override void InstallBindings()
         {
@@ -17,7 +17,7 @@ namespace GameCore.Projectiles.Infrastructure
             
             Container
                 .Bind<ProjectileSettingsRepository>()
-                .FromInstance(projectileSettingsRepository)
+                .FromInstance(_projectileSettingsRepository)
                 .AsSingle();
         }
     }
