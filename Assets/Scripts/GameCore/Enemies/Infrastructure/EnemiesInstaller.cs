@@ -8,13 +8,15 @@ namespace GameCore.Enemies.Infrastructure
 {
     public class EnemiesInstaller : MonoInstaller
     {
-        [SerializeField] private GameObject _monsterPrefab;
         [SerializeField] private MonsterSpawnerSettings _monsterSpawnerSettings;
 
         public override void InstallBindings()
         {
             BindSpawners();
-            BindFactories();
+            
+            Container
+                .BindInterfacesTo<EnemyFactory>()
+                .AsSingle();
         }
 
         private void BindSpawners()
@@ -27,13 +29,6 @@ namespace GameCore.Enemies.Infrastructure
                 .Bind<MonsterSpawnerSettings>()
                 .FromInstance(_monsterSpawnerSettings)
                 .AsSingle();
-        }
-        
-        private void BindFactories()
-        {
-            Container
-                .BindFactory<Vector3, Vector3, Monster, MonsterFactory>()
-                .FromComponentInNewPrefab(_monsterPrefab);
         }
     }
 }

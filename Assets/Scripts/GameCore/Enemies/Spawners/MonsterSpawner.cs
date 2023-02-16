@@ -9,15 +9,15 @@ namespace GameCore.Enemies.Spawners
 	public class MonsterSpawner : MonoBehaviour {
 		[SerializeField] private Transform _moveTargetTransform; // TODO inject
 
-		private MonsterFactory _monsterFactory;
+		private IEnemyFactory _enemyFactory;
 		private MonsterSpawnerSettings _monsterSpawnerSettings;
 		
 		private float _lastTimeSpawn = float.NegativeInfinity;
 
 		[Inject]
-		public void Construct(MonsterFactory monsterFactory, MonsterSpawnerSettings monsterSpawnerSettings)
+		public void Construct(IEnemyFactory factory, MonsterSpawnerSettings monsterSpawnerSettings)
 		{
-			_monsterFactory = monsterFactory ?? throw new NullReferenceException(nameof(MonsterFactory));
+			_enemyFactory = factory ?? throw new NullReferenceException(nameof(IEnemyFactory));
 			_monsterSpawnerSettings = monsterSpawnerSettings 
 				? monsterSpawnerSettings 
 				: throw new NullReferenceException(nameof(MonsterSpawnerSettings));
@@ -33,7 +33,9 @@ namespace GameCore.Enemies.Spawners
 
 		private void Spawn()
 		{
-			_monsterFactory.Create(transform.position, _moveTargetTransform.position);
+			var enemy = _enemyFactory.CreateMonster(_monsterSpawnerSettings.MonsterPrefab, transform);
+			
+			enemy.SetTargetPosition(_moveTargetTransform.position);
 			
 			_lastTimeSpawn = Time.time;
 		}

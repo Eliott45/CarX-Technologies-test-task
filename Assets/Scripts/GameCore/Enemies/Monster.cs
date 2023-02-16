@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Zenject;
 
 namespace GameCore.Enemies
 {
@@ -13,15 +12,11 @@ namespace GameCore.Enemies
         
         private Vector3 _destination;
         
-        [Inject]
-        public void Construct(Vector3 spawnPosition, Vector3 destination)
-        {
-            transform.position = spawnPosition;
-            _destination = destination;
-        }
-        
         public GameObject GetEnemyGameObject() => 
             gameObject;
+
+        public void SetTargetPosition(Vector3 position) => 
+            _destination = position;
 
         void Start() {
             m_hp = m_maxHP;
