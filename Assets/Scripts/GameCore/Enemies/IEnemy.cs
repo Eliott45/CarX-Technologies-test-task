@@ -1,5 +1,4 @@
-﻿using System;
-using Extensions.PoolingSystem.Application;
+﻿using Extensions.PoolingSystem.Application;
 using UnityEngine;
 
 namespace GameCore.Enemies

@@ -6,6 +6,7 @@ namespace GameCore.Enemies
 {
     public class Monster : MonoBehaviour, IEnemy
     {
+        [SerializeField] private Rigidbody _rigidbody;
         const float m_reachDistance = 0.3f; // TODO remove it pls
 
         private IPoolApplication _poolApplication;
@@ -37,26 +38,38 @@ namespace GameCore.Enemies
 
         public void SetSpeed(float speed) => 
             _speed = speed;
-        
+
         public GameObject GetGameObject() => 
             gameObject;
 
         private void Die() => 
             _poolApplication.Return(gameObject);
 
-        private void Update () { 
-            /* TODO destroy on other class
+        private void Update () {
             if (Vector3.Distance (transform.position, _destination) <= m_reachDistance) {
                 Destroy (gameObject);
-                return;
             }
-            */
+        }
+
+        private void FixedUpdate()
+        {
+            Move();
+        }
+
+        private void Move()
+        {
+            var currentVelocity = _rigidbody.velocity;
             
-            var translation = _destination - transform.position; // todo rigidbody move
-            if (translation.magnitude > _speed) {
-                translation = translation.normalized * _speed;
-            }
-            transform.Translate (translation);
+            var movePosition = _destination - transform.position;
+            movePosition.Normalize();
+            movePosition *= _speed;
+
+            var targetVelocity = transform.TransformDirection(movePosition);
+            var finalVelocity = targetVelocity - currentVelocity;
+            
+            Vector3.ClampMagnitude(finalVelocity, default);
+            
+            _rigidbody.AddForce(finalVelocity, ForceMode.VelocityChange);
         }
     }
 }
