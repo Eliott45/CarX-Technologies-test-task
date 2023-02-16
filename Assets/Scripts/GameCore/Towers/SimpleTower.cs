@@ -4,6 +4,7 @@ using System.Linq;
 using Extensions.PoolingSystem.Application;
 using GameCore.Notifiers;
 using GameCore.Settings;
+using GameCore.Settings.Towers;
 using UnityEngine;
 using Zenject;
 
@@ -64,7 +65,7 @@ namespace GameCore.Towers
         
         private bool HasTarget()
         {
-            _targets.RemoveAll(x => !x);
+            _targets.RemoveAll(x => !x.activeSelf);
             return _targets.Count > 0;
         } 
         

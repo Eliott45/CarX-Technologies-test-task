@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace GameCore.Settings
+namespace GameCore.Settings.Towers
 {
-    [CreateAssetMenu(fileName = nameof(SimpleTowerSettings), menuName = "GameSettings/" + nameof(SimpleTowerSettings))]
+    [CreateAssetMenu(fileName = nameof(SimpleTowerSettings), menuName = "GameSettings/Towers/" + nameof(SimpleTowerSettings))]
     public class SimpleTowerSettings : ScriptableObject
     {
         [SerializeField] private float _attackReloading;

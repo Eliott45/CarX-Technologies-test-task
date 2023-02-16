@@ -1,9 +1,9 @@
 ﻿using GameCore.Enemies;
 using UnityEngine;
 
-namespace GameCore.Settings
+namespace GameCore.Settings.Enemies
 {
-    [CreateAssetMenu(fileName = nameof(MonsterSpawnerSettings), menuName = "GameSettings/" + nameof(MonsterSpawnerSettings))]
+    [CreateAssetMenu(fileName = nameof(MonsterSpawnerSettings), menuName = "GameSettings/Enemies/" + nameof(MonsterSpawnerSettings))]
     public class MonsterSpawnerSettings : ScriptableObject
     {
         [SerializeField] private Monster _monsterPrefab;
