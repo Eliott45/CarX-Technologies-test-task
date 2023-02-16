@@ -23,9 +23,7 @@ namespace GameCore.Enemies.Factory
             var monster = (IEnemy)_poolApplication.Create(monsterPrefab, spawnTransform);
 
             monster.Init(_poolApplication);
-            
-            monster.SetCurrentPosition(spawnTransform.position);
-            
+
             monster.SetMaxHp(_monsterSettings.Hp);
             monster.SetSpeed(_monsterSettings.Speed);
 

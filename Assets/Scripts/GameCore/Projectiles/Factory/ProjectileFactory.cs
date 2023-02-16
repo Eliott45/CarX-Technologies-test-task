@@ -25,7 +25,6 @@ namespace GameCore.Projectiles.Factory
             var projectile = (IProjectile)_poolApplication.Create(projectileSettings.ProjectilePrefab, spawnTransform);
             
             projectile.Init(_poolApplication);
-            projectile.SetCurrentPosition(spawnTransform.position);
             
             projectile.SetSpeed(projectileSettings.Speed);
             projectile.SetDamage(projectileSettings.Damage);

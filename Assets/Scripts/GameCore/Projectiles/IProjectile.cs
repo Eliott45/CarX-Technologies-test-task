@@ -9,6 +9,5 @@ namespace GameCore.Projectiles
         void SetTarget(GameObject gameObject);
         void SetDamage(int damage);
         void SetSpeed(float speed);
-        void SetCurrentPosition(Vector3 spawnTransformPosition);
     }
 }

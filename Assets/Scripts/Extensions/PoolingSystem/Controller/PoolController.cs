@@ -85,6 +85,7 @@ namespace Extensions.PoolingSystem.Controller
                 return;
 
             obj.transform.SetParent(transform, false);
+            obj.transform.position = Vector3.zero;
             obj.SetActive(false);
             
             if (pool.inUse.Remove(obj)) 

@@ -25,10 +25,7 @@ namespace GameCore.Projectiles
 
         public void SetSpeed(float newSpeed) => 
             speed = newSpeed;
-
-        public void SetCurrentPosition(Vector3 spawnTransformPosition) => 
-            transform.position = spawnTransformPosition;
-
+        
         protected void ReturnToPool() => 
             _poolApplication.Return(gameObject);
     }

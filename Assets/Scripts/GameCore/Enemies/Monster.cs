@@ -25,10 +25,7 @@ namespace GameCore.Enemies
             if(_hp <= 0 ) 
                 Die();
         }
-
-        public void SetCurrentPosition(Vector3 position) => 
-            gameObject.transform.position = position;
-
+        
         public void SetTargetPosition(Vector3 position) => 
             _destination = position;
 
