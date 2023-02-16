@@ -1,17 +1,12 @@
 ﻿using GameCore.Enemies;
 using UnityEngine;
 
-namespace GameCore.Towers.Projectiles
+namespace GameCore.Projectiles
 {
-	public class GuidedProjectile : MonoBehaviour, IProjectile {
+	public class GuidedProjectile : Projectile {
 		public float m_speed = 0.2f;
 		public int m_damage = 10;
 		
-		private GameObject _target;
-
-		public void SetTarget(GameObject target) => 
-			_target = target;
-
 		private void Update () {
 			if (_target == null) {
 				Destroy (gameObject);

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Extensions.PoolingSystem.Application;
 using GameCore.Notifiers;
+using GameCore.Projectiles.Factory;
 using GameCore.Settings.Towers;
-using GameCore.Towers.Factory;
 using UnityEngine;
 using Zenject;
 
@@ -73,7 +73,7 @@ namespace GameCore.Towers
         
         private void Attack(GameObject target) 
         {
-            var projectile = _projectilesFactory.CreateProjectile(_settings.ProjectilePrefab, _muggleTransform);
+            var projectile = _projectilesFactory.CreateProjectile(_settings.ProjectileKeyword, _muggleTransform);
             projectile.SetTarget(target);
             
             _lastShotTime = Time.time;

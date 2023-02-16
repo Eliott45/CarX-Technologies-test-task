@@ -1,4 +1,4 @@
-﻿using GameCore.Towers.Projectiles;
+﻿using GameCore.Settings.Projectiles;
 using UnityEngine;
 
 namespace GameCore.Settings.Towers
@@ -8,10 +8,10 @@ namespace GameCore.Settings.Towers
     {
         [SerializeField] private float _attackReloading;
         [SerializeField] private float _attackRange;
-        [SerializeField] private GuidedProjectile _projectilePrefab;
+        [SerializeField] private EProjectileKeyword _projectileKeyword;
 
         public float AttackReloading => _attackReloading;
         public float AttackRange => _attackRange;
-        public GuidedProjectile ProjectilePrefab => _projectilePrefab;
+        public EProjectileKeyword ProjectileKeyword => _projectileKeyword;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace GameCore.Towers.Projectiles
+namespace GameCore.Projectiles
 {
     public interface IProjectile
     {
