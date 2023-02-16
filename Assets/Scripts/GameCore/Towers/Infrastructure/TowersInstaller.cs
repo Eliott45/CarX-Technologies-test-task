@@ -1,5 +1,5 @@
-﻿using GameCore.Settings;
-using GameCore.Settings.Towers;
+﻿using GameCore.Settings.Towers;
+using GameCore.Towers.Factory;
 using UnityEngine;
 using Zenject;
 
@@ -11,11 +11,10 @@ namespace GameCore.Towers.Infrastructure
 
         public override void InstallBindings()
         {
-            BindSimpleTower();
-        }
-
-        private void BindSimpleTower()
-        {
+            Container
+                .BindInterfacesTo<ProjectileFactory>()
+                .AsSingle();
+            
             Container
                 .Bind<SimpleTowerSettings>()
                 .FromInstance(_simpleTowerSettings)

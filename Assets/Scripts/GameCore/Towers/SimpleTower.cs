@@ -4,6 +4,7 @@ using System.Linq;
 using Extensions.PoolingSystem.Application;
 using GameCore.Notifiers;
 using GameCore.Settings.Towers;
+using GameCore.Towers.Factory;
 using UnityEngine;
 using Zenject;
 
@@ -12,17 +13,19 @@ namespace GameCore.Towers
     public class SimpleTower : MonoBehaviour
     {
         [SerializeField] private EnemyNotifier _enemyNotifier;
+        [SerializeField] private Transform _muggleTransform;
 
         private readonly List<GameObject> _targets = new List<GameObject>(5);
         
-        private IPoolApplication _poolApplication;
+        private IProjectilesFactory _projectilesFactory;
         private SimpleTowerSettings _settings;
+        
         private float _lastShotTime = float.NegativeInfinity;
 
         [Inject]
-        public void Construct(IPoolApplication poolApplication, SimpleTowerSettings settings)
-        {   
-            _poolApplication = poolApplication ?? throw new NullReferenceException(nameof(IPoolApplication));
+        public void Construct(IProjectilesFactory projectilesFactory, SimpleTowerSettings settings)
+        {
+            _projectilesFactory = projectilesFactory ?? throw new NullReferenceException(nameof(IProjectilesFactory));
             _settings = settings 
                 ? settings 
                 : throw new NullReferenceException(nameof(SimpleTowerSettings));
@@ -70,9 +73,8 @@ namespace GameCore.Towers
         
         private void Attack(GameObject target) 
         {
-            var projectile = _poolApplication.Create(_settings.ProjectilePrefab, transform);
-            projectile.transform.position += Vector3.up * _settings.HeightIndent; 
-            projectile.m_target = target; // TODO plug for example: SetTarget(target)
+            var projectile = _projectilesFactory.CreateProjectile(_settings.ProjectilePrefab, _muggleTransform);
+            projectile.SetTarget(target);
             
             _lastShotTime = Time.time;
         }
