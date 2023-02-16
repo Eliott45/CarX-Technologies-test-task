@@ -17,13 +17,13 @@ namespace GameCore.Notifiers
         private void OnTriggerEnter(Collider potentialTarget)
         {
             if (potentialTarget.TryGetComponent<IEnemy>(out var enemy))
-                OnTargetEnter?.Invoke(enemy.GetEnemyGameObject());
+                OnTargetEnter?.Invoke(enemy.GetGameObject());
         }
 
         private void OnTriggerExit(Collider potentialTarget)
         {
             if (potentialTarget.TryGetComponent<IEnemy>(out var enemy))  
-                OnTargetExit?.Invoke(enemy.GetEnemyGameObject());
+                OnTargetExit?.Invoke(enemy.GetGameObject());
         }
     }
 }

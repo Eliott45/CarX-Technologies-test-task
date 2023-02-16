@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Extensions.PoolingSystem.Application;
 using GameCore.Notifiers;
-using GameCore.Settings;
+using GameCore.Settings.Towers;
 using UnityEngine;
 using Zenject;
 
@@ -11,7 +11,7 @@ namespace GameCore.Towers
 {
     public class SimpleTower : MonoBehaviour
     {
-        [SerializeField] private EnemyNotifier enemyNotifier;
+        [SerializeField] private EnemyNotifier _enemyNotifier;
 
         private readonly List<GameObject> _targets = new List<GameObject>(5);
         
@@ -30,19 +30,19 @@ namespace GameCore.Towers
 
         private void OnEnable()
         {
-            enemyNotifier.OnTargetEnter += OnEnemyAppear;
-            enemyNotifier.OnTargetExit += OnEnemyDisappear;
+            _enemyNotifier.OnTargetEnter += OnEnemyAppear;
+            _enemyNotifier.OnTargetExit += OnEnemyDisappear;
         }
 
         private void OnDisable()
         {
-            enemyNotifier.OnTargetEnter -= OnEnemyAppear;
-            enemyNotifier.OnTargetExit -= OnEnemyDisappear;
+            _enemyNotifier.OnTargetEnter -= OnEnemyAppear;
+            _enemyNotifier.OnTargetExit -= OnEnemyDisappear;
         }
 
         private void Awake()
         {
-            enemyNotifier.UpdateNotifierRadius(_settings.AttackRange);
+            _enemyNotifier.UpdateNotifierRadius(_settings.AttackRange);
         }
         
         private void Update () {
@@ -64,7 +64,7 @@ namespace GameCore.Towers
         
         private bool HasTarget()
         {
-            _targets.RemoveAll(x => !x);
+            _targets.RemoveAll(x => !x.activeSelf);
             return _targets.Count > 0;
         } 
         

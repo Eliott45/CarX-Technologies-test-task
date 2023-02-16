@@ -1,6 +1,7 @@
 ﻿using System;
 using GameCore.Enemies.Factory;
 using GameCore.Settings;
+using GameCore.Settings.Enemies;
 using UnityEngine;
 using Zenject;
 
