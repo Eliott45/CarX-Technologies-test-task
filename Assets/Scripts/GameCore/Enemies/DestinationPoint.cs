@@ -28,7 +28,7 @@ namespace GameCore.Enemies
             _enemyNotifier.OnTargetEnter -= OnEnemyArrive;
         }
 
-        private void OnEnemyArrive(GameObject enemy) => 
-            _poolApplication.Return(enemy);
+        private void OnEnemyArrive(IEnemy enemy) => 
+            _poolApplication.Return(enemy.GetGameObject());
     }
 }

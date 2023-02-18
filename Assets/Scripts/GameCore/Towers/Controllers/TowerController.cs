@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GameCore.Enemies;
 using GameCore.Notifiers;
 using GameCore.Projectiles.Factory;
 using GameCore.Settings.Keywords;
@@ -19,8 +20,8 @@ namespace GameCore.Towers.Controllers
         
         private protected IProjectilesFactory projectilesFactory;
         private protected TowerSettings settings;
-        
-        private readonly List<GameObject> _targets = new List<GameObject>(5);
+
+        private readonly List<IEnemy> _targets = new List<IEnemy>(5);
         
         private TowerSettingsRepository _towerSettingsRepository;
         private float _lastShotTime = float.NegativeInfinity;
@@ -46,23 +47,22 @@ namespace GameCore.Towers.Controllers
             _enemyNotifier.OnTargetExit -= OnEnemyDisappear;
         }
         
-        private void Awake()
+        private protected virtual void Awake()
         {
             settings = _towerSettingsRepository.GetTowerSettings(_towerSettingsType);
         }
 
-        private void Start()
+        private protected virtual void Start()
         {
             _enemyNotifier.UpdateNotifierRadius(settings.AttackRange);
         }
-        
-                
-        protected virtual void Attack(GameObject target) 
+
+        protected virtual void Attack(IEnemy target) 
         {
             _lastShotTime = Time.time;
         }
         
-        private void Update () {
+        protected virtual void Update () {
             
             if (!IsAvailableToAttack())
                 return;
@@ -70,10 +70,10 @@ namespace GameCore.Towers.Controllers
             Attack(_targets.First());
         }
         
-        private void OnEnemyAppear(GameObject enemy) => 
+        private void OnEnemyAppear(IEnemy enemy) => 
             _targets.Add(enemy);
 
-        private void OnEnemyDisappear(GameObject enemy) => 
+        private void OnEnemyDisappear(IEnemy enemy) => 
             _targets.Remove(enemy);
         
         private bool IsAvailableToAttack() => 
@@ -81,7 +81,7 @@ namespace GameCore.Towers.Controllers
 
         private bool HasTarget()
         {
-            _targets.RemoveAll(x => !x.activeSelf);
+            _targets.RemoveAll(x => !x.GetGameObject().activeSelf);
             return _targets.Count > 0;
         }
     }

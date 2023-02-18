@@ -10,14 +10,14 @@ namespace GameCore.Settings.Repositories
         menuName = "GameSettings/Repositories/" + nameof(ProjectileSettingsRepository))]
     public class ProjectileSettingsRepository : ScriptableObject
     {
-        [SerializeField] private ProjectileSettings[] _projectileSettings;
+        [SerializeField] private DefaultProjectileSettings[] _projectileSettings;
 
-        public ProjectileSettings GetProjectileSettings(EProjectileKeyword keyword)
+        public DefaultProjectileSettings GetProjectileSettings(EProjectileKeyword keyword)
         {
             var settings = _projectileSettings.FirstOrDefault(stg => stg.ProjectileKeyword == keyword);
             if (settings == null)
                 throw new ArgumentException(
-                    $"{nameof(ProjectileSettings)} for {keyword} projectile was not found!");
+                    $"{nameof(DefaultProjectileSettings)} for {keyword} projectile was not found!");
 
             return settings;
         }

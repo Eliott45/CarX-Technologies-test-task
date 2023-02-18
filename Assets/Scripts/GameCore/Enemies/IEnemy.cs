@@ -13,5 +13,6 @@ namespace GameCore.Enemies
         void SetMaxHp(int hp);
         void SetSpeed(float speed);
         GameObject GetGameObject();
+        Vector3 GetVelocity();
     }
 }

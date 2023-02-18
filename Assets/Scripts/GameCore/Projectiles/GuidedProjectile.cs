@@ -1,14 +1,12 @@
-﻿using GameCore.Enemies;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GameCore.Projectiles
 {
 	public class GuidedProjectile : Projectile
 	{
-		private void FixedUpdate()
+		private protected override void FixedUpdate()
 		{
-			if (target == null || !target.activeSelf) 
-				ReturnToPool();
+			base.FixedUpdate();
 			Move();
 		}
 
@@ -26,15 +24,6 @@ namespace GameCore.Projectiles
 			Vector3.ClampMagnitude(finalVelocity, default);
             
 			rb.AddForce(finalVelocity, ForceMode.VelocityChange);
-		}
-		
-		private void OnCollisionEnter(Collision potentialTarget)
-		{
-			if (!potentialTarget.gameObject.TryGetComponent<IEnemy>(out var enemy))
-				return;
-			
-			enemy.TakeDamage(damage);
-			ReturnToPool();
 		}
 	}
 }

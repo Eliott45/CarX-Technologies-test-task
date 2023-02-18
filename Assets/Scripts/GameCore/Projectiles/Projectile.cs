@@ -1,5 +1,7 @@
 ﻿using System;
 using Extensions.PoolingSystem.Application;
+using GameCore.Enemies;
+using GameCore.Projectiles.Interfaces;
 using UnityEngine;
 
 namespace GameCore.Projectiles
@@ -12,7 +14,8 @@ namespace GameCore.Projectiles
         
         private protected GameObject target;
         private protected float speed;
-        private protected int damage;
+        
+        private int _damage;
 
         public void Init(IPoolApplication poolApplication)
         {
@@ -21,14 +24,32 @@ namespace GameCore.Projectiles
 
         public void SetTarget(GameObject targetGameObject) => 
             target = targetGameObject;
-
+        
         public void SetDamage(int newDamage) => 
-            damage = newDamage;
+            _damage = newDamage;
 
         public void SetSpeed(float newSpeed) => 
             speed = newSpeed;
-        
-        protected void ReturnToPool() => 
+
+        public void Launch(Vector3 velocity, ForceMode forceMode = ForceMode.Force) => 
+            rb.AddForce(velocity * speed, forceMode);
+
+        private protected virtual void ReturnToPool() => 
             _poolApplication.Return(gameObject);
+
+        private protected virtual void FixedUpdate()
+        {
+            if (target == null || !target.activeSelf) 
+                ReturnToPool();
+        }
+        
+        private void OnCollisionEnter(Collision potentialTarget)
+        {
+            if (!potentialTarget.gameObject.TryGetComponent<IEnemy>(out var enemy))
+                return;
+            
+            enemy.TakeDamage(_damage);
+            ReturnToPool();
+        }
     }
 }

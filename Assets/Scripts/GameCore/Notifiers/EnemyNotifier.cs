@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace GameCore.Notifiers
 {
-    public class EnemyNotifier : MonoBehaviour, ITargetNotifier<GameObject>
+    public class EnemyNotifier : MonoBehaviour, ITargetNotifier<IEnemy>
     {
         [SerializeField] private SphereCollider _sphereCollider;
         
-        public event Action<GameObject> OnTargetEnter;
-        public event Action<GameObject> OnTargetExit;
+        public event Action<IEnemy> OnTargetEnter;
+        public event Action<IEnemy> OnTargetExit;
 
         public void UpdateNotifierRadius(float radius) => 
             _sphereCollider.radius = radius;
@@ -17,13 +17,13 @@ namespace GameCore.Notifiers
         private void OnTriggerEnter(Collider potentialTarget)
         {
             if (potentialTarget.TryGetComponent<IEnemy>(out var enemy))
-                OnTargetEnter?.Invoke(enemy.GetGameObject());
+                OnTargetEnter?.Invoke(enemy);
         }
 
         private void OnTriggerExit(Collider potentialTarget)
         {
             if (potentialTarget.TryGetComponent<IEnemy>(out var enemy))  
-                OnTargetExit?.Invoke(enemy.GetGameObject());
+                OnTargetExit?.Invoke(enemy);
         }
     }
 }

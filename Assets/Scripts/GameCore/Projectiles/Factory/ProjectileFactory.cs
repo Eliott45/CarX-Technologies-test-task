@@ -1,5 +1,6 @@
 ﻿using System;
 using Extensions.PoolingSystem.Application;
+using GameCore.Projectiles.Interfaces;
 using GameCore.Settings.Keywords;
 using GameCore.Settings.Projectiles;
 using GameCore.Settings.Repositories;
@@ -20,7 +21,7 @@ namespace GameCore.Projectiles.Factory
                 : throw new NullReferenceException(nameof(ProjectileSettingsRepository));
         }
 
-        public IProjectile CreateProjectile(EProjectileKeyword projectileKeyword, Transform spawnTransform)
+        public IProjectile CreateProjectile(EProjectileKeyword projectileKeyword, Transform spawnTransform = null)
         {
             var projectileSettings = _projectileSettingsRepository.GetProjectileSettings(projectileKeyword);
             
@@ -28,7 +29,7 @@ namespace GameCore.Projectiles.Factory
             
             projectile.Init(_poolApplication);
             
-            projectile.SetSpeed(projectileSettings.Speed);
+            projectile.SetSpeed(projectileSettings.SpeedMultiplier);
             projectile.SetDamage(projectileSettings.Damage);
 
             return projectile;

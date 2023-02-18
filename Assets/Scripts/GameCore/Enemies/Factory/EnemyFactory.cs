@@ -20,8 +20,9 @@ namespace GameCore.Enemies.Factory
 
         public IEnemy CreateMonster(Monster monsterPrefab, Transform spawnTransform)
         {
-            var monster = (IEnemy)_poolApplication.Create(monsterPrefab, spawnTransform);
+            var monster = (IEnemy)_poolApplication.Create(monsterPrefab);
 
+            monster.GetGameObject().transform.position = spawnTransform.position;
             monster.Init(_poolApplication);
 
             monster.SetMaxHp(_monsterSettings.Hp);

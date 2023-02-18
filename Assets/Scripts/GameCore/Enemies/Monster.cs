@@ -18,13 +18,6 @@ namespace GameCore.Enemies
         {
             _poolApplication = poolApplication ?? throw new NullReferenceException(nameof(IPoolApplication));
         }
-
-        public void TakeDamage(int damage)
-        {
-            _hp -= damage;
-            if(_hp <= 0 ) 
-                Die();
-        }
         
         public void SetTargetPosition(Vector3 position) => 
             _destination = position;
@@ -38,18 +31,27 @@ namespace GameCore.Enemies
         public GameObject GetGameObject() => 
             gameObject;
 
-        private void Die() => 
-            _poolApplication.Return(gameObject);
+        public Vector3 GetVelocity() =>
+            _rigidbody.velocity;
+
+        public void TakeDamage(int damage)
+        {
+            _hp -= damage;
+            if(_hp <= 0 ) 
+                Die();
+        }
         
         private void FixedUpdate()
         {
             Move();
         }
-
+        
         private void Move()
         {
-            var currentVelocity = _rigidbody.velocity;
+            // свойство физического тела, которое показывает текущую величину ускорения объекта
+            var currentVelocity = _rigidbody.velocity; 
             
+            // позиция куда передвинется объект 1/60 физического кадра = конечная точка прибытия - текущая позиция
             var movePosition = _destination - transform.position;
             movePosition.Normalize();
             movePosition *= _speed;
@@ -58,8 +60,11 @@ namespace GameCore.Enemies
             var finalVelocity = targetVelocity - currentVelocity;
             
             Vector3.ClampMagnitude(finalVelocity, default);
-            
+
             _rigidbody.AddForce(finalVelocity, ForceMode.VelocityChange);
         }
+        
+        private void Die() => 
+            _poolApplication.Return(gameObject);
     }
 }

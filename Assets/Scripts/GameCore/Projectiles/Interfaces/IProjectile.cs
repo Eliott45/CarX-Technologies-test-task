@@ -1,7 +1,7 @@
 ﻿using Extensions.PoolingSystem.Application;
 using UnityEngine;
 
-namespace GameCore.Projectiles
+namespace GameCore.Projectiles.Interfaces
 {
     public interface IProjectile
     {
@@ -9,5 +9,6 @@ namespace GameCore.Projectiles
         void SetTarget(GameObject gameObject);
         void SetDamage(int damage);
         void SetSpeed(float speed);
+        void Launch(Vector3 velocity, ForceMode forceMode);
     }
 }

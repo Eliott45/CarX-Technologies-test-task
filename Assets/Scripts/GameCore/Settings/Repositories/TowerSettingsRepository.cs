@@ -18,7 +18,7 @@ namespace GameCore.Settings.Repositories
             var settings = _towerSettings.FirstOrDefault(stg => stg.TowerKeyword == keyword);
             if (settings == null)
                 throw new ArgumentException(
-                    $"{nameof(ProjectileSettings)} for {keyword} projectile was not found!");
+                    $"{nameof(DefaultProjectileSettings)} for {keyword} projectile was not found!");
 
             return settings;
         }
